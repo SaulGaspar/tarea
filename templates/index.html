@@ -1,318 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Predictor de Gastos Médicos</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-    }
-
-    .card {
-      background: white;
-      border-radius: 8px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      font-size: 1.4rem;
-      color: #1a202c;
-      margin-bottom: 0.3rem;
-    }
-
-    .subtitulo {
-      color: #718096;
-      font-size: 0.85rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .campo {
-      margin-bottom: 1rem;
-    }
-
-    label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #4a5568;
-      margin-bottom: 0.3rem;
-    }
-
-    select {
-      width: 100%;
-      padding: 0.6rem 0.8rem;
-      border: 1px solid #cbd5e0;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      color: #2d3748;
-      background: white;
-    }
-
-    select:focus {
-      outline: none;
-      border-color: #4299e1;
-    }
-
-    .fila {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    input[type="range"] {
-      flex: 1;
-      cursor: pointer;
-      accent-color: #4299e1;
-    }
-
-    .valor {
-      background: #ebf8ff;
-      color: #2b6cb0;
-      font-weight: 700;
-      font-size: 0.9rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 4px;
-      min-width: 3rem;
-      text-align: center;
-    }
-
-    .toggle {
-      display: flex;
-      border: 1px solid #cbd5e0;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .toggle input { display: none; }
-
-    .toggle label {
-      flex: 1;
-      text-align: center;
-      padding: 0.6rem;
-      cursor: pointer;
-      color: #718096;
-      background: white;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin: 0;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    .toggle input:checked + label {
-      background: #4299e1;
-      color: white;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid #e2e8f0;
-      margin: 1.5rem 0;
-    }
-
-    button {
-      width: 100%;
-      background: #4299e1;
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      padding: 0.8rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    button:hover { background: #3182ce; }
-    button:disabled { background: #a0aec0; cursor: not-allowed; }
-
-    .resultado {
-      margin-top: 1.5rem;
-      padding: 1.2rem;
-      border-radius: 6px;
-      text-align: center;
-      display: none;
-    }
-
-    .resultado.show { display: block; }
-    .resultado.ok  { background: #ebf8ff; border: 1px solid #bee3f8; }
-    .resultado.err { background: #fff5f5; border: 1px solid #fed7d7; }
-
-    .resultado .etiqueta {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #718096;
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-    }
-
-    .resultado .monto {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: #2b6cb0;
-    }
-
-    .resultado .detalle {
-      font-size: 0.8rem;
-      color: #718096;
-      margin-top: 0.3rem;
-    }
-
-    .resultado .error-msg { color: #e53e3e; font-size: 0.9rem; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictor de rendimiento estudiantil</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .card { background: white; border-radius: 12px; padding: 30px; width: 100%; max-width: 560px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { font-size: 1.5rem; margin-bottom: 8px; color: #1a202c; }
+        .subtitle { color: #718096; margin-bottom: 25px; }
+        .section-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #a0aec0; margin: 20px 0 10px; letter-spacing: 0.5px; }
+        .campo { margin-bottom: 18px; }
+        label { display: block; font-weight: 600; color: #4a5568; margin-bottom: 6px; font-size: 0.9rem; }
+        input[type="range"] { width: 100%; accent-color: #667eea; }
+        select { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; }
+        button { width: 100%; padding: 14px; background: #667eea; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 15px; }
+        button:hover { background: #5a67d8; }
+        .resultado { margin-top: 20px; padding: 20px; border-radius: 8px; text-align: center; display: none; }
+        .resultado.show { display: block; }
+        .resultado.ok { background: #f0fff4; border: 1px solid #9ae6b4; }
+        .puntaje { font-size: 3.5rem; font-weight: 800; color: #2c3e50; }
+    </style>
 </head>
 <body>
-<div class="card">
+    <div class="card">
+        <h1>Predictor de rendimiento estudiantil</h1>
+        <p class="subtitle">Ingresa los datos para estimar la calificación</p>
 
-  <h1>Predictor de Gastos Médicos</h1>
-  <p class="subtitulo">Ingresa tus datos para estimar el costo del seguro</p>
+        <div class="section-title">Datos académicos</div>
+        <div class="campo">
+            <label>Horas estudiadas por semana</label>
+            <input type="range" id="hours_studied" min="1" max="44" value="20" oninput="document.getElementById('hval').innerText=this.value">
+            <span id="hval" style="font-weight:700;">20</span>
+        </div>
+        <div class="campo">
+            <label>Asistencia (%)</label>
+            <input type="range" id="attendance" min="60" max="100" value="80" oninput="document.getElementById('aval').innerText=this.value+'%'">
+            <span id="aval" style="font-weight:700;">80%</span>
+        </div>
+        <div class="campo">
+            <label>Puntaje anterior</label>
+            <input type="range" id="previous_scores" min="50" max="100" value="75" oninput="document.getElementById('pval').innerText=this.value">
+            <span id="pval" style="font-weight:700;">75</span>
+        </div>
 
-  <!-- Edad -->
-  <div class="campo">
-    <label>Edad</label>
-    <div class="fila">
-      <input type="range" id="age" min="18" max="64" value="30"
-             oninput="document.getElementById('age-val').textContent=this.value">
-      <span class="valor" id="age-val">30</span>
-    </div>
-  </div>
+        <div class="section-title">Entorno</div>
+        <div class="campo">
+            <label>Parental involvement</label>
+            <select id="parental_involvement">
+                <option value="Low">Bajo</option>
+                <option value="Medium" selected>Medio</option>
+                <option value="High">Alto</option>
+            </select>
+        </div>
+        <div class="campo">
+            <label>Acceso a recursos</label>
+            <select id="access_to_resources">
+                <option value="Low">Bajo</option>
+                <option value="Medium" selected>Medio</option>
+                <option value="High">Alto</option>
+            </select>
+        </div>
+        <div class="campo">
+            <label>Motivación</label>
+            <select id="motivation_level">
+                <option value="Low">Baja</option>
+                <option value="Medium" selected>Media</option>
+                <option value="High">Alta</option>
+            </select>
+        </div>
 
-  <!-- IMC -->
-  <div class="campo">
-    <label>IMC (Índice de Masa Corporal)</label>
-    <div class="fila">
-      <input type="range" id="bmi" min="15" max="54" step="0.1" value="30"
-             oninput="document.getElementById('bmi-val').textContent=parseFloat(this.value).toFixed(1)">
-      <span class="valor" id="bmi-val">30.0</span>
-    </div>
-  </div>
+        <button onclick="predecir()">Predecir calificación</button>
 
-  <div class="grid-2">
-
-    <!-- Sexo -->
-    <div class="campo">
-      <label>Sexo</label>
-      <select id="sex">
-        <option value="male">Masculino</option>
-        <option value="female">Femenino</option>
-      </select>
-    </div>
-
-    <!-- Región -->
-    <div class="campo">
-      <label>Región</label>
-      <select id="region">
-        <option value="northwest">Noroeste</option>
-        <option value="northeast">Noreste</option>
-        <option value="southeast">Sureste</option>
-        <option value="southwest">Suroeste</option>
-      </select>
-    </div>
-
-    <!-- Hijos -->
-    <div class="campo">
-      <label>Número de hijos</label>
-      <select id="children">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
+        <div class="resultado" id="resultado">
+            <div class="puntaje" id="puntaje"></div>
+        </div>
     </div>
 
-    <!-- Fumador -->
-    <div class="campo">
-      <label>¿Fumador?</label>
-      <div class="toggle">
-        <input type="radio" name="smoker" id="s-no" value="no" checked>
-        <label for="s-no">No</label>
-        <input type="radio" name="smoker" id="s-yes" value="yes">
-        <label for="s-yes">Sí</label>
-      </div>
-    </div>
+    <script>
+        async function predecir() {
+            const datos = {
+                hours_studied: document.getElementById("hours_studied").value,
+                attendance: document.getElementById("attendance").value,
+                parental_involvement: document.getElementById("parental_involvement").value,
+                access_to_resources: document.getElementById("access_to_resources").value,
+                previous_scores: document.getElementById("previous_scores").value,
+                motivation_level: document.getElementById("motivation_level").value
+            };
 
-  </div>
+            try {
+                const response = await fetch("/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(datos)
+                });
 
-  <hr>
+                const data = await response.json();
+                const box = document.getElementById("resultado");
+                const puntajeEl = document.getElementById("puntaje");
 
-  <button id="btn" onclick="predecir()">Calcular predicción</button>
-
-  <div class="resultado" id="resultado">
-    <div class="etiqueta">Cargo médico estimado</div>
-    <div class="monto" id="monto"></div>
-    <div class="detalle" id="detalle"></div>
-    <div class="error-msg" id="error-msg"></div>
-  </div>
-
-</div>
-
-<script>
-async function predecir() {
-  const btn = document.getElementById("btn");
-  const box = document.getElementById("resultado");
-
-  btn.disabled = true;
-  btn.textContent = "Calculando...";
-  box.className = "resultado";
-
-  const datos = {
-    age:      document.getElementById("age").value,
-    sex:      document.getElementById("sex").value,
-    bmi:      document.getElementById("bmi").value,
-    children: document.getElementById("children").value,
-    smoker:   document.querySelector('input[name="smoker"]:checked').value,
-    region:   document.getElementById("region").value
-  };
-
-  try {
-    const res  = await fetch("/predict", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(datos)
-    });
-    const data = await res.json();
-
-    btn.disabled = false;
-    btn.textContent = "Calcular predicción";
-
-    if (data.status === "ok") {
-      const fmt = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
-      document.getElementById("monto").textContent   = fmt.format(data.prediction);
-      document.getElementById("detalle").textContent =
-        `Edad: ${datos.age} · IMC: ${parseFloat(datos.bmi).toFixed(1)} · ${datos.smoker === "yes" ? "Fumador" : "No fumador"}`;
-      document.getElementById("error-msg").textContent = "";
-      box.className = "resultado ok show";
-    } else {
-      document.getElementById("monto").textContent   = "";
-      document.getElementById("detalle").textContent = "";
-      document.getElementById("error-msg").textContent = "Error: " + data.error;
-      box.className = "resultado err show";
-    }
-  } catch (e) {
-    btn.disabled = false;
-    btn.textContent = "Calcular predicción";
-    document.getElementById("error-msg").textContent = "Error de conexión.";
-    box.className = "resultado err show";
-  }
-}
-</script>
+                if (data.status === "ok") {
+                    puntajeEl.textContent = data.prediction;
+                    box.classList.add("show", "ok");
+                } else {
+                    puntajeEl.textContent = "Error";
+                    box.classList.add("show");
+                }
+            } catch (error) {
+                document.getElementById("puntaje").textContent = "Error de conexión";
+                document.getElementById("resultado").classList.add("show");
+            }
+        }
+    </script>
 </body>
 </html>

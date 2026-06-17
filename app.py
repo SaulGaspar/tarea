@@ -4,8 +4,12 @@ import numpy as np
 
 app = Flask(__name__)
 
+# Cargar modelo y scaler
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
+
+# Mapeos
+LOW_MED_HIGH = {"Low": 0, "Medium": 1, "High": 2}
 
 @app.route("/")
 def index():
@@ -14,22 +18,29 @@ def index():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        data = request.get_json()
-
-        age      = float(data["age"])
-        sex      = 0 if data["sex"] == "male" else 1
-        bmi      = float(data["bmi"])
-        children = int(data["children"])
-        smoker   = 1 if data["smoker"] == "yes" else 0
-        region   = {"northwest": 0, "northeast": 1, "southeast": 2, "southwest": 3}[data["region"]]
-
-        features = np.array([[age, sex, bmi, children, smoker, region]])
-        features_scaled = scaler.transform(features)
-        prediction = model.predict(features_scaled)[0]
-
-        return jsonify({"prediction": round(float(prediction), 2), "status": "ok"})
+        d = request.get_json()
+        
+        input_data = np.array([[ 
+            int(d["hours_studied"]),
+            int(d["attendance"]),
+            LOW_MED_HIGH[d["parental_involvement"]],
+            LOW_MED_HIGH[d["access_to_resources"]],
+            1 if d.get("extracurricular") == "Yes" else 0,
+            int(d.get("sleep_hours", 7)),
+            int(d["previous_scores"]),
+            LOW_MED_HIGH[d["motivation_level"]],
+            1 if d.get("internet_access") == "Yes" else 0,
+            int(d.get("tutoring_sessions", 2))
+        ]])
+        
+        input_scaled = scaler.transform(input_data)
+        prediction = model.predict(input_scaled)[0]
+        score = max(0, min(100, round(float(prediction), 1)))
+        
+        return jsonify({"prediction": score, "status": "ok"})
+    
     except Exception as e:
         return jsonify({"error": str(e), "status": "error"}), 400
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
