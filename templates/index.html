@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Predictor de Gastos Médicos</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-top: 0.4rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #0ea5e920;
+      color: #38bdf8;
+      border: 1px solid #0ea5e940;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.2rem 0.75rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input, select {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #f1f5f9;
+      font-size: 0.95rem;
+      padding: 0.65rem 0.85rem;
+      width: 100%;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px #0ea5e920;
+    }
+
+    input[type="range"] {
+      padding: 0.4rem 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-track {
+      background: #334155;
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      margin-top: -6px;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .range-val {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #38bdf8;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.3rem 0.6rem;
+      min-width: 3rem;
+      text-align: center;
+    }
+
+    .smoker-toggle {
+      display: flex;
+      gap: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #334155;
+    }
+
+    .smoker-toggle label {
+      flex: 1;
+      text-align: center;
+      padding: 0.65rem;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0;
+      transition: background 0.2s, color 0.2s;
+      color: #94a3b8;
+      background: #0f172a;
+    }
+
+    .smoker-toggle input { display: none; }
+
+    .smoker-toggle input:checked + label {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #334155;
+      margin: 1.5rem 0;
+    }
+
+    .btn {
+      width: 100%;
+      background: #38bdf8;
+      color: #0f172a;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.3px;
+    }
+
+    .btn:hover { background: #7dd3fc; }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+
+    .result {
+      margin-top: 1.5rem;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .result.show { display: block; }
+    .result.success { background: #0ea5e915; border: 1px solid #0ea5e940; }
+    .result.error   { background: #ef444415; border: 1px solid #ef444440; }
+
+    .result-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-amount {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #38bdf8;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .result-sub {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-top: 0.4rem;
+    }
+
+    .result-error-msg { color: #f87171; font-size: 0.9rem; }
+
+    .spinner {
+      display: none;
+      width: 22px; height: 22px;
+      border: 3px solid #334155;
+      border-top-color: #38bdf8;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="icon">🏥</div>
+    <div class="badge">Modelo ML · Random Forest</div>
+    <h1>Predictor de Gastos Médicos</h1>
+    <p>Ingresa tus características para estimar el costo del seguro</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- Edad -->
+    <div class="field full">
+      <label>Edad</label>
+      <div class="range-row">
+        <input type="range" id="age" min="18" max="64" value="30"
+               oninput="document.getElementById('age-val').textContent=this.value">
+        <span class="range-val" id="age-val">30</span>
+      </div>
+    </div>
+
+    <!-- Sexo -->
+    <div class="field">
+      <label>Sexo</label>
+      <select id="sex">
+        <option value="male">Masculino</option>
+        <option value="female">Femenino</option>
+      </select>
+    </div>
+
+    <!-- Región -->
+    <div class="field">
+      <label>Región</label>
+      <select id="region">
+        <option value="northwest">Noroeste</option>
+        <option value="northeast">Noreste</option>
+        <option value="southeast">Sureste</option>
+        <option value="southwest">Suroeste</option>
+      </select>
+    </div>
+
+    <!-- BMI -->
+    <div class="field full">
+      <label>IMC (Índice de Masa Corporal)</label>
+      <div class="range-row">
+        <input type="range" id="bmi" min="15" max="54" step="0.1" value="30"
+               oninput="document.getElementById('bmi-val').textContent=parseFloat(this.value).toFixed(1)">
+        <span class="range-val" id="bmi-val">30.0</span>
+      </div>
+    </div>
+
+    <!-- Hijos -->
+    <div class="field">
+      <label>Número de hijos</label>
+      <select id="children">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+
+    <!-- Fumador -->
+    <div class="field">
+      <label>¿Fumador?</label>
+      <div class="smoker-toggle">
+        <input type="radio" name="smoker" id="s-no" value="no" checked>
+        <label for="s-no">No</label>
+        <input type="radio" name="smoker" id="s-yes" value="yes">
+        <label for="s-yes">Sí</label>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <button class="btn" id="btn-predict" onclick="predict()">
+    Calcular predicción
+  </button>
+
+  <div class="spinner" id="spinner"></div>
+
+  <div class="result" id="result-box">
+    <div class="result-label">Cargo médico estimado</div>
+    <div class="result-amount" id="result-amount"></div>
+    <div class="result-sub" id="result-sub"></div>
+    <div class="result-error-msg" id="result-error"></div>
+  </div>
+</div>
+
+<script>
+async function predict() {
+  const btn = document.getElementById("btn-predict");
+  const spinner = document.getElementById("spinner");
+  const box = document.getElementById("result-box");
+
+  btn.disabled = true;
+  spinner.style.display = "block";
+  box.className = "result";
+
+  const payload = {
+    age:      document.getElementById("age").value,
+    sex:      document.getElementById("sex").value,
+    bmi:      document.getElementById("bmi").value,
+    children: document.getElementById("children").value,
+    smoker:   document.querySelector('input[name="smoker"]:checked').value,
+    region:   document.getElementById("region").value
+  };
+
+  try {
+    const res  = await fetch("/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    spinner.style.display = "none";
+    btn.disabled = false;
+
+    if (data.status === "ok") {
+      const fmt = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+      document.getElementById("result-amount").textContent = fmt.format(data.prediction);
+      document.getElementById("result-sub").textContent =
+        `Edad: ${payload.age} · IMC: ${parseFloat(payload.bmi).toFixed(1)} · ${payload.smoker === "yes" ? "Fumador" : "No fumador"}`;
+      document.getElementById("result-error").textContent = "";
+      box.className = "result success show";
+    } else {
+      document.getElementById("result-amount").textContent = "";
+      document.getElementById("result-sub").textContent = "";
+      document.getElementById("result-error").textContent = "Error: " + data.error;
+      box.className = "result error show";
+    }
+  } catch (e) {
+    spinner.style.display = "none";
+    btn.disabled = false;
+    document.getElementById("result-amount").textContent = "";
+    document.getElementById("result-sub").textContent = "";
+    document.getElementById("result-error").textContent = "Error de conexión con el servidor.";
+    box.className = "result error show";
+  }
+}
+</script>
+</body>
+</html>
