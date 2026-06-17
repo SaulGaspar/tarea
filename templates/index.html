@@ -104,7 +104,7 @@
                     puntajeEl.textContent = data.prediction;
                     box.classList.add("show", "ok");
                 } else {
-                    puntajeEl.textContent = "Error";
+                    puntajeEl.textContent = data.error || "Error";
                     box.classList.add("show");
                 }
             } catch (error) {
